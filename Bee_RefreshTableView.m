@@ -94,13 +94,26 @@
 {
     if (self.refreshHeaderView == nil) {
         
-        No320EGORefreshTableHeaderView *view = [[No320EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.bounds.size.height, self.frame.size.width, self.bounds.size.height)];
+        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.bounds.size.height, self.frame.size.width, self.bounds.size.height)];
         view.delegate = self;
         [self addSubview:view];
         self.refreshHeaderView = view;
         [view release];
     }
     self.refreshHeaderView.delegate = self;
+    
+    
+    if (self.loadMoreFooterView == nil) {
+        EGOLoadMoreTableFooterView *view = [[EGOLoadMoreTableFooterView alloc] initWithFrame:CGRectMake(0.0f, self.contentSize.height, self.frame.size.width, self.bounds.size.height)];
+        view.delegate = self;
+        [self addSubview:view];
+        self.loadMoreFooterView = view;
+        [view release];
+    }
+
+    self.loadMoreFooterView.delegate = self;
+    
+    
     //  update the last update date
     [self check_date_now];
     
@@ -172,6 +185,7 @@
 	//  model should call this when its done loading
 	_reloading = NO;
 	[self.refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self];
+    [self.loadMoreFooterView egoLoadMoreScrollViewDataSourceDidFinishedLoading:self];
 }
 
 
@@ -183,18 +197,45 @@
 #pragma mark -
 #pragma mark EGORefreshTableHeaderDelegate Methods
 
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(No320EGORefreshTableHeaderView*)view{
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
 	[self reloadTableViewDataSource];
 }
 
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(No320EGORefreshTableHeaderView*)view {
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {
 	return _reloading; // should return if data source model is reloading
 }
 
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(No320EGORefreshTableHeaderView*)view {
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view {
     self.lastUpdatedDate = [NSDate date];
 	return self.lastUpdatedDate; // should return date data source was last changed
 }
+
+
+#pragma mark -
+#pragma mark EGOLoadMoreTableFooterDelegate Methods
+
+- (void)egoLoadMoreTableFooterDidTriggerLoad:(EGOLoadMoreTableFooterView *)view{
+	
+	[self reloadTableViewDataSource];
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+	
+}
+
+- (BOOL)egoLoadMoreTableFooterDataSourceIsLoading:(EGOLoadMoreTableFooterView*)view{
+	
+	return _reloading; // should return if data source model is reloading
+	
+}
+
+- (NSDate*)egoLoadMoreTableFooterDataSourceLastUpdated:(EGOLoadMoreTableFooterView*)view{
+	
+	return [NSDate date]; // should return date data source was last changed
+	
+}
+- (BOOL)egoLoadMoreTableFooterViewDefaultIsShowing:(EGOLoadMoreTableFooterView *)view{
+    return YES;
+}
+
 
 
 #pragma mark - 自动刷新
@@ -235,14 +276,11 @@
 }
 
 - (void)add_need_reload_tip_view
-{
-//    UIView *v = [[UIView alloc] initWithFrame:self.frame];
+{ 
+//    UIImageView *v = [[UIImageView alloc] initWithFrame:self.frame];
+//    [v setImage:__TABLE_BOARD_IMAGE(@"need_reload.png")];
 //    v.tag = 10000;
-    
-    UIImageView *v = [[UIImageView alloc] initWithFrame:self.frame];
-    [v setImage:__TABLE_BOARD_IMAGE(@"need_reload.png")];
-    v.tag = 10000;
-    [self addSubview:v];
+//    [self addSubview:v];
 }
 
 @end

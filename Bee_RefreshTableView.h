@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "No320EGORefreshTableHeaderView.h"
+#import "EGOLoadMoreTableFooterView.h"
+#import "EGORefreshTableHeaderView.h"
 
 /**
  * 主要处理DATableView的重载问题
@@ -29,7 +30,10 @@
 @property (nonatomic, assign, readwrite) int pageNumber;
 @property (nonatomic, assign, readwrite) int pageSize;
 
-@property (nonatomic, retain, readwrite) No320EGORefreshTableHeaderView *refreshHeaderView;
+@property (nonatomic, retain, readwrite) EGORefreshTableHeaderView *refreshHeaderView;
+
+//EGORefreshTableHeaderView *_refreshHeaderView;
+@property (nonatomic, retain, readwrite) EGOLoadMoreTableFooterView * loadMoreFooterView;
 
 @property (nonatomic, retain, readwrite) NSMutableArray *result_array;
 

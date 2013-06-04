@@ -176,7 +176,7 @@
 
 - (void)scrollViewDidScroll:(Bee_RefreshTableView *)scrollView {
 	[scrollView.refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    
+    [scrollView.loadMoreFooterView egoLoadMoreScrollViewDidScroll:scrollView];
     
     int contentHeight = scrollView.contentSize.height;
     contentHeight = contentHeight>=scrollView.bounds.size.height?contentHeight:scrollView.bounds.size.height;
@@ -215,6 +215,11 @@
     //
     if ([scrollView.refreshHeaderView respondsToSelector:@selector(egoRefreshScrollViewDidEndDragging:)]) {
         [scrollView.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    }
+    
+    
+    if ([scrollView.loadMoreFooterView respondsToSelector:@selector(egoLoadMoreScrollViewDidEndDragging:)]) {
+        [scrollView.loadMoreFooterView egoLoadMoreScrollViewDidEndDragging:scrollView];
     }
 }
 
